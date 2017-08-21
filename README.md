@@ -5,6 +5,11 @@ These instruction will help you to set up a project environment on your local ma
 ### Prerequisites
 * [Python interpreter of version 3.5](https://www.python.org/downloads/release/python-354/)
 #### Installing
+* Clone a repository into chosen directory:
+```
+git clone https://github.com/KKhanda/SuperSurvey.git
+```
+* Install required modules
 ```
 pip install Django==1.11.4
 ```

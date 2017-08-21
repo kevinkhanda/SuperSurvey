@@ -11,5 +11,7 @@ git clone https://github.com/KKhanda/SuperSurvey.git
 ```
 * Install required modules
 ```
+pip install -U pip
 pip install Django==1.11.4
+pip install psycopg2
 ```

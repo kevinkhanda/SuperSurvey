@@ -76,14 +76,10 @@ WSGI_APPLICATION = 'supersurvey.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'supersurveydb',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'TEST': {
-            'NAME': 'supersurveytestdb',
-        },
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 

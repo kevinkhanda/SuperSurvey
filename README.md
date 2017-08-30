@@ -15,3 +15,9 @@ pip install -U pip
 pip install Django==1.11.4
 pip install psycopg2
 ```
+#### Running in docker
+
+```
+docker-compose build
+docker-compose up
+```

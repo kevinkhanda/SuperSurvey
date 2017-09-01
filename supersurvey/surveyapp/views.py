@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Question
 
 
 # Create your views here.
@@ -12,10 +13,10 @@ def hello(request):
 
 
 def questions(request):
-    response = "Here is the list of questions"
-    return HttpResponse(response)
+    questions_list = Question.objects.filter(deleted=False)
+    return HttpResponse(questions_list)
 
 
 def question_details(request, question_id):
-    response = "You are looking at details of question %s."
-    return HttpResponse(response % question_id)
+    queried_question = Question.objects.filter(pk=question_id)
+    return HttpResponse(queried_question)

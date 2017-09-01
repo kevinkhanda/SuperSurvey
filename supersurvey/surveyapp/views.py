@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 from .models import Question
+
+from .forms import SurveyForm
 
 
 # Create your views here.
@@ -11,11 +16,18 @@ def index(request):
 def hello(request):
     return render(request, "hello.html", {'message': 'message from view'})
 
+def save_answer(request, question, answer):
+    pass
 
 def questions(request):
-    questions_list = Question.objects.filter(deleted=False)
-    return HttpResponse(questions_list)
+    extra_questions = Question.objects.filter(deleted=False)
+    form = SurveyForm(request.POST or None, questions=extra_questions)
+    if form.is_valid():
+        for (question, answer) in form.answers():
+            save_answer(request, question, answer)
+        return redirect("hello")
 
+    return render_to_response("survey.html", {'form': form})
 
 def question_details(request, question_id):
     queried_question = Question.objects.filter(pk=question_id)

@@ -1,10 +1,12 @@
+
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.conf.urls import url
 
-from . import views
+from .views import hello, question_details, questions
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^hello/$', views.hello, name='hello'),
-    url(r'^questions/$', views.questions, name='questions'),
-    url(r'^questions/(?P<question_id>[0-9]+)/details/$', views.question_details, name='details')
+    url(r'^hello/$', hello, name='hello'),
+    url(r'^questions/$', questions, name='questions'),
+    url(r'^questions/(?P<question_id>[0-9]+)/details/$', question_details, name='details'),
 ]

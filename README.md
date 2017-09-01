@@ -12,8 +12,7 @@ git clone https://github.com/KKhanda/SuperSurvey.git
 * Install required modules
 ```
 pip install -U pip
-pip install Django==1.11.4
-pip install psycopg2
+pip install -r requirements.txt
 ```
 #### Running in docker
 
@@ -21,3 +20,9 @@ pip install psycopg2
 docker-compose build
 docker-compose up
 ```
+
+#### Setup initial data
+
+Run following command to add 3 basic questions
+
+`python manage.py shell < add_initial_questions.py`

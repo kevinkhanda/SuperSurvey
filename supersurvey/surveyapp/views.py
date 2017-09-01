@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 
 from django.http import HttpResponse
-from django.shortcuts import render,render_to_response
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, render_to_response, redirect
 from .models import Question
 
 from .forms import SurveyForm
@@ -19,6 +20,7 @@ def hello(request):
 def save_answer(request, question, answer):
     pass
 
+@csrf_exempt
 def questions(request):
     extra_questions = Question.objects.filter(deleted=False)
     form = SurveyForm(request.POST or None, questions=extra_questions)

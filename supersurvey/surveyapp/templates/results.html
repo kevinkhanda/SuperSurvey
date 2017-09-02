@@ -33,7 +33,7 @@
                                     label: "Population (millions)",
                                     backgroundColor: palette('tol', {{question.answers|length}}).map(function(hex) {
                                         return '#' + hex;
-                                    }),//["#3e95cd", "#8e5ea2"],//"#3cba9f","#e8c3b9","#c45850"],
+                                    }),
                                     data: ({{question.answers|safe}}).map(function(el){ return el.number; })
                                 }]
                                 },

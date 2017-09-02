@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+
+{% block title %}
+    Raw results
+{% endblock %}
+
+{% block content %}
+    {% for user in users %}
+        <div class="panel panel-default">
+            <div class="panel-heading ">Response {{forloop.counter}}</div>
+            <div class="panel-body">
+                {% for question in user.questions %}
+                    <b><p>{{question.title}}</p></b>
+                    <p>{{question.answer}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

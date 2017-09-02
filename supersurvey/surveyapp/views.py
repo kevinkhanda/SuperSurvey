@@ -73,5 +73,31 @@ def results(request):
             print('Can not recognize question type %s' % q.type)
         questions.append(question)
     
-    return render_to_response("results.html", {'questions': questions})
     return render_to_response('results.html', {'questions': questions})
+
+def raw_results(request):
+    return render_to_response('raw-results.html', 
+        {'users': [{
+            'questions': [ {
+                'title': 'Che, kak dela?',
+                'answer': 'supeeeer'
+            },
+            {
+                'title': 'Che, na chem codish?',
+                'answer': 'Na pitone yopta'
+            }
+        ]},
+        {
+            'questions': [
+                 {
+                'title': 'Che, kak dela?',
+                'answer': 'otli4n0'
+            },
+            {
+                'title': 'Che, na chem codish?',
+                'answer': 'Na jave yopta'
+            }
+        ]
+        }
+        
+        ]})

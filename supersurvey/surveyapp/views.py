@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response, redirect
-from .models import Question
+from .models import Question, Answer, Session
 
 from .forms import SurveyForm
 
@@ -19,7 +19,13 @@ def hello(request):
 
 
 def save_answer(request, question, answer):
-    pass
+    session_id = Session.objects.all().get(pk=1).session_id + 1
+    Session.objects.get(pk=1).session_id = session_id
+    Answer.objects.create(
+        question=Question.objects.all().get(pk=question),
+        session_id=session_id,
+        answer=answer,
+    ).save()
 
 
 @csrf_exempt

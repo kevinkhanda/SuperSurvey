@@ -1,4 +1,6 @@
-from .surveyapp.models import Question
+from surveyapp.models import Question, Session
+
+Session.objects.create().save()
 
 Question.objects.create(
     text='What is your favorite programming language',

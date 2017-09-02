@@ -10,6 +10,10 @@ CHOICE_TYPE = (
 )
 
 
+class Session(models.Model):
+    session_id = models.IntegerField(default=0)
+
+
 class Question(models.Model):
     text = models.TextField()
     variants = ArrayField(models.CharField(max_length=256))

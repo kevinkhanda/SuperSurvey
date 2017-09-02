@@ -9,15 +9,6 @@ from .models import Question, Answer, Session
 from .forms import SurveyForm
 
 
-# Create your views here.
-def index(request):
-    return HttpResponse("Hi, folk! You are on a Super Survey index.")
-
-
-def hello(request):
-    return render(request, "hello.html", {'message': 'message from view'})
-
-
 def save_answer(request, question, answer):
     session_id = Session.objects.all().get(pk=1).session_id + 1
     Session.objects.get(pk=1).session_id = session_id
@@ -35,9 +26,9 @@ def questions(request):
     if form.is_valid():
         for (question, answer) in form.answers():
             save_answer(request, question, answer)
-        return redirect("hello")
+        return redirect('hello')
 
-    return render_to_response("survey.html", {'form': form})
+    return render_to_response('survey.html', {'form': form})
 
 
 def question_details(request, question_id):
@@ -83,3 +74,4 @@ def results(request):
         questions.append(question)
     
     return render_to_response("results.html", {'questions': questions})
+    return render_to_response('results.html', {'questions': questions})

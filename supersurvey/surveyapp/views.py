@@ -43,3 +43,42 @@ def questions(request):
 def question_details(request, question_id):
     queried_question = Question.objects.filter(pk=question_id)
     return HttpResponse(queried_question)
+
+
+def mean(question_id):
+    answers = Answer.objects.filter(question=Question.objects.get(pk=question_id))
+    sum = 0
+    for answer in answers:
+        sum += int(answer.answer)
+    return sum / answers.count()
+
+
+def distribution(question_id):
+    question = Question.objects.get(pk=question_id)
+    answers = Answer.objects.filter(question=question)
+    result = []
+    for i, variant in enumerate(question.variants):
+        count = answers.filter(answer=i).count()
+        result.append((variant, count))
+    return result
+
+
+def survey_results(request):
+    result = []
+    all_questions = Question.objects.filter(deleted=False)
+    for q in all_questions:
+        dick = {'type': q.type, 'title': q.text}
+        if q.type == 'NR':
+            dick['value'] = mean(q.pk)
+        elif q.type == 'MC':
+            dick['answers'] = distribution(q.pk)
+        elif q.type == 'TE':
+            answers = Answer.objects.filter(question=q)
+            answers_list = []
+            for answer in answers:
+                answers_list.append(answer.answer)
+            dick['answers'] = answers_list
+        else:
+            print("Пошел на хуй")
+        result.append(dick)
+    return HttpResponse(result)

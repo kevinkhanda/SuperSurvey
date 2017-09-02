@@ -50,7 +50,7 @@ def mean(question_id):
     sum = 0
     for answer in answers:
         sum += int(answer.answer)
-    return sum / answers.count()
+    return (sum / answers.count()) if answers.count() > 0 else 0
 
 
 def distribution(question_id):
@@ -59,26 +59,27 @@ def distribution(question_id):
     result = []
     for i, variant in enumerate(question.variants):
         count = answers.filter(answer=i).count()
-        result.append((variant, count))
+        result.append({'answer': variant, 'number': count})
     return result
 
 
-def survey_results(request):
-    result = []
+def results(request):
+    questions = []
     all_questions = Question.objects.filter(deleted=False)
     for q in all_questions:
-        dick = {'type': q.type, 'title': q.text}
+        question = {'type': q.type, 'title': q.text}
         if q.type == 'NR':
-            dick['value'] = mean(q.pk)
+            question['value'] = mean(q.pk)
         elif q.type == 'MC':
-            dick['answers'] = distribution(q.pk)
+            question['answers'] = distribution(q.pk)
         elif q.type == 'TE':
             answers = Answer.objects.filter(question=q)
             answers_list = []
             for answer in answers:
                 answers_list.append(answer.answer)
-            dick['answers'] = answers_list
+            question['answers'] = answers_list
         else:
-            print("Пошел на хуй")
-        result.append(dick)
-    return HttpResponse(result)
+            print('Can not recognize question type %s' % q.type)
+        questions.append(question)
+    
+    return render_to_response("results.html", {'questions': questions})

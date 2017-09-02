@@ -1,7 +1,7 @@
 nr_Questions = Question.objects.filter(type='NR', deleted=False)
 averages = []
 for q in nr_Questions:
-	nr_Answers = Answers.objects.filter(question=q)
+	nr_Answers = Answer.objects.filter(question=q)
 	count = 0
 	total = 0
 	for ans in nr_Answers:
@@ -12,9 +12,13 @@ for q in nr_Questions:
 
 def mc_question_distribution(id):
 	q = Question.get(pk=id)
-	mc_Answers = Question.objects.filter(question=q)
+	mc_Answers = Answer.objects.filter(question=q)
 	distribution = []
 	for i, variant in enumerate(question.variants):
 		count = mc_Answers.filter(answer=variant).count()
 		distribution.append((i, variant, count))
 	return distribution
+
+#def session_answers(id):
+#	answers = Answer.objects.filter
+

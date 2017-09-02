@@ -5,6 +5,7 @@ from django import forms
 
 from operator import attrgetter
 
+
 class SurveyForm(forms.Form):
     def __init__(self, *args, **kwargs):
         questions = sorted(list(kwargs.pop('questions')), key=attrgetter("number"))
@@ -32,7 +33,7 @@ class SurveyForm(forms.Form):
                     label=question.text)
 
     def clean(self):
-        cleaned_data = super(TestForm, self).clean()
+        cleaned_data = super(SurveyForm, self).clean()
         return cleaned_data
 
     def answers(self):

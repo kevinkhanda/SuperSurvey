@@ -1,4 +1,4 @@
-from surveyapp.models import Question
+from .surveyapp.models import Question
 
 Question.objects.create(
     text='What is your favorite programming language',

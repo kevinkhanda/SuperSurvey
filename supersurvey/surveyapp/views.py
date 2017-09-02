@@ -17,8 +17,10 @@ def index(request):
 def hello(request):
     return render(request, "hello.html", {'message': 'message from view'})
 
+
 def save_answer(request, question, answer):
     pass
+
 
 @csrf_exempt
 def questions(request):
@@ -30,6 +32,7 @@ def questions(request):
         return redirect("hello")
 
     return render_to_response("survey.html", {'form': form})
+
 
 def question_details(request, question_id):
     queried_question = Question.objects.filter(pk=question_id)

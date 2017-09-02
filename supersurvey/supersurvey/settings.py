@@ -56,7 +56,7 @@ ROOT_URLCONF = 'supersurvey.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['supersurvey/surveyapp/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

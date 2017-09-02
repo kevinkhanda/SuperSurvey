@@ -20,11 +20,9 @@ class SurveyForm(forms.Form):
                     widget=forms.RadioSelect,
                     required=True)
             elif question.type == 'NR':
-                self.fields['question_%s' % question.id] = forms.IntegerField(
-                    min_value=0,
-                    max_value=10,
-                    label=question.text,
-                    required=True)
+                self.fields['question_%s' % question.id] = forms.ChoiceField(
+                    choices=[(i, i) for i in range(0, 11)],
+                    label=question.text)
             elif question.type == 'TE':
                 self.fields['question_%s' % question.id] = forms.CharField(
                     max_length=512,

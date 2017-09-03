@@ -78,7 +78,19 @@ def survey_results(request):
             for answer in answers:
                 answers_list.append(answer.answer)
             dick['answers'] = answers_list
-        else:
-            print("Пошел на хуй")
         result.append(dick)
     return HttpResponse(result)
+
+
+def survey_answers(request):
+    result = []
+    questions_list = Question.objects.get(deleted=False)
+    for question in questions_list:
+        answers = Answer.objects.get(question=question)
+        for answer in answers:
+            result.append((
+                answer.session_id,
+                question,
+                answer
+            ))
+    return sorted(result, key=lambda tup: tup[1])

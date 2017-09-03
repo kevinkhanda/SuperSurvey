@@ -3,15 +3,14 @@ from __future__ import unicode_literals
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import render_to_response, redirect
 from .models import Question, Answer, Session
 
 from .forms import SurveyForm
 
 
 def save_answer(request, question, answer):
-    session_id = Session.objects.all().get(pk=1).session_id + 1
-    Session.objects.get(pk=1).session_id = session_id
+    session_id = Session.objects.all().get(pk=1).session_id
     Answer.objects.create(
         question=Question.objects.all().get(pk=question),
         session_id=session_id,
@@ -21,6 +20,13 @@ def save_answer(request, question, answer):
 
 @csrf_exempt
 def questions(request):
+    # setting session for current user
+    if request.method == 'POST':
+        session = Session.objects.all().get(pk=1)
+        session_id = session.session_id + 1
+        session.session_id = session_id
+        session.save()
+    # loading questions
     extra_questions = Question.objects.filter(deleted=False)
     form = SurveyForm(request.POST or None, questions=extra_questions)
     if form.is_valid():
@@ -54,8 +60,8 @@ def distribution(question_id):
     return result
 
 
-def results(request):
-    questions = []
+def survey_statistics(request):
+    questions_list = []
     all_questions = Question.objects.filter(deleted=False)
     for q in all_questions:
         question = {'type': q.type, 'title': q.text}
@@ -71,47 +77,27 @@ def results(request):
             question['answers'] = answers_list
         else:
             print('Can not recognize question type %s' % q.type)
-        questions.append(question)
+        questions_list.append(question)
 
-    return render_to_response('results.html', {'questions': questions})
+    return render_to_response('statistics.html', {'questions': questions_list})
 
 
 def survey_answers(request):
     result = []
-    questions_list = Question.objects.get(deleted=False)
+    questions_list = Question.objects.filter(deleted=False)
     for question in questions_list:
-        answers = Answer.objects.get(question=question)
+        answers = Answer.objects.filter(question=question)
         for answer in answers:
             result.append((
                 answer.session_id,
                 question,
                 answer
             ))
-    return sorted(result, key=lambda tup: tup[1])
-
-def raw_results(request):
-    return render_to_response('raw-results.html',
-        {'users': [{
-            'questions': [ {
-                'title': 'Che, kak dela?',
-                'answer': 'supeeeer'
-            },
-            {
-                'title': 'Che, na chem codish?',
-                'answer': 'Na pitone yopta'
-            }
-        ]},
-        {
-            'questions': [
-                 {
-                'title': 'Che, kak dela?',
-                'answer': 'otli4n0'
-            },
-            {
-                'title': 'Che, na chem codish?',
-                'answer': 'Na jave yopta'
-            }
-        ]
-        }
-
-        ]})
+    sorted(result, key=lambda t: t[0])
+    users_dict = {}
+    for tup in result:
+        if not tup[0] in users_dict:
+            users_dict[tup[0]] = []
+        questions_dict = {'title': tup[1].text, 'answer': tup[2].answer}
+        users_dict[tup[0]].append(questions_dict)
+    return HttpResponse(users_dict)

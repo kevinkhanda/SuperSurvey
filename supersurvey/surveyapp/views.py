@@ -35,7 +35,6 @@ def questions(request):
         for (question, answer) in form.answers():
             save_answer(request, question, answer)
         return redirect('hello')
-
     return render_to_response('survey.html', {'form': form})
 
 
@@ -61,6 +60,7 @@ def distribution(question_id):
         result.append({'answer': variant, 'number': count})
     return result
 
+
 @login_required(login_url='/survey/login/')
 def survey_statistics(request):
     questions_list = []
@@ -82,9 +82,11 @@ def survey_statistics(request):
         questions_list.append(question)
     return render_to_response('statistics.html', {'questions': questions_list})
 
+
 @login_required(login_url='/survey/login/')
 def survey_answers(request):
     result = []
+    groups = []
     questions_list = Question.objects.filter(deleted=False)
     for question in questions_list:
         answers = Answer.objects.filter(question=question)
@@ -94,7 +96,7 @@ def survey_answers(request):
                 question,
                 answer
             ))
-    groups = []
+    result = sorted(result, key=lambda f: f[0])
     for k, g in groupby(result, lambda f: f[0]):
         groups.append(list(g))
     users_dict = {'users': []}

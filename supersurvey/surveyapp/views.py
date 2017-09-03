@@ -68,6 +68,7 @@ def survey_statistics(request):
     for q in all_questions:
         question = {'type': q.type, 'title': q.text}
         if q.type == 'NR':
+            question['value'] = mean(q.pk)
             if 'answers' not in question:
                 question['answers'] = []
             for i in range(1, 11):

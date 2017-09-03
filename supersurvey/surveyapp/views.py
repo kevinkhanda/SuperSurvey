@@ -93,7 +93,6 @@ def survey_answers(request):
                 question,
                 answer
             ))
-    sorted(result, key=lambda t: t[0])
     users_dict = {}
     for tup in result:
         if not tup[0] in users_dict:

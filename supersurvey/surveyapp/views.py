@@ -4,15 +4,14 @@ from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import render_to_response, redirect
 from .models import Question, Answer, Session
 
 from .forms import SurveyForm
-
+from itertools import groupby
 
 def save_answer(request, question, answer):
-    session_id = Session.objects.all().get(pk=1).session_id + 1
-    Session.objects.get(pk=1).session_id = session_id
+    session_id = Session.objects.all().get(pk=1).session_id
     Answer.objects.create(
         question=Question.objects.all().get(pk=question),
         session_id=session_id,
@@ -22,6 +21,13 @@ def save_answer(request, question, answer):
 
 @csrf_exempt
 def questions(request):
+    # setting session for current user
+    if request.method == 'POST':
+        session = Session.objects.all().get(pk=1)
+        session_id = session.session_id + 1
+        session.session_id = session_id
+        session.save()
+    # loading questions
     extra_questions = Question.objects.filter(deleted=False)
     form = SurveyForm(request.POST or None, questions=extra_questions)
     if form.is_valid():
@@ -55,8 +61,8 @@ def distribution(question_id):
     return result
 
 @login_required(login_url='/survey/login/')
-def results(request):
-    questions = []
+def survey_statistics(request):
+    questions_list = []
     all_questions = Question.objects.filter(deleted=False)
     for q in all_questions:
         question = {'type': q.type, 'title': q.text}
@@ -72,34 +78,30 @@ def results(request):
             question['answers'] = answers_list
         else:
             print('Can not recognize question type %s' % q.type)
-        questions.append(question)
-    
-    return render_to_response('results.html', {'questions': questions})
+        questions_list.append(question)
+
+    return render_to_response('statistics.html', {'questions': questions_list})
 
 @login_required(login_url='/survey/login/')
-def raw_results(request):
-    return render_to_response('raw-results.html', 
-        {'users': [{
-            'questions': [ {
-                'title': 'Che, kak dela?',
-                'answer': 'supeeeer'
-            },
-            {
-                'title': 'Che, na chem codish?',
-                'answer': 'Na pitone yopta'
-            }
-        ]},
-        {
-            'questions': [
-                 {
-                'title': 'Che, kak dela?',
-                'answer': 'otli4n0'
-            },
-            {
-                'title': 'Che, na chem codish?',
-                'answer': 'Na jave yopta'
-            }
-        ]
-        }
-        
-        ]})
+def survey_answers(request):
+    result = []
+    questions_list = Question.objects.filter(deleted=False)
+    for question in questions_list:
+        answers = Answer.objects.filter(question=question)
+        for answer in answers:
+            result.append((
+                answer.session_id,
+                question,
+                answer
+            ))
+    groups = []
+    result = sorted(result, key=lambda f:f[0])
+    for k, g in groupby(result, lambda f: f[0]):
+        groups.append(list(g))
+    users_dict = {'users':[]}
+    for questions in groups :
+        user = {'questions': []}
+        for question in questions:
+            user['questions'].append({'title': question[1].text, 'answer': question[2].answer})
+        users_dict['users'].append(user)
+    return render_to_response('answers.html', users_dict)

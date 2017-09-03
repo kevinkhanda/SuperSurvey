@@ -68,7 +68,14 @@ def survey_statistics(request):
     for q in all_questions:
         question = {'type': q.type, 'title': q.text}
         if q.type == 'NR':
-            question['value'] = mean(q.pk)
+            if 'answers' not in question:
+                question['answers'] = []
+            for i in range(1, 11):
+                question_answers = Answer.objects.filter(question=q).filter(answer=i)
+                if question_answers.count() > 0:
+                    question['answers'].append(question_answers.count())
+                else:
+                    question['answers'].append(0)
         elif q.type == 'MC':
             question['answers'] = distribution(q.pk)
         elif q.type == 'TE':

@@ -9,6 +9,7 @@ from .models import Question, Answer, Session
 from .forms import SurveyForm
 from itertools import groupby
 
+
 def save_answer(request, question, answer):
     session_id = Session.objects.all().get(pk=1).session_id
     Answer.objects.create(
@@ -44,10 +45,10 @@ def question_details(request, question_id):
 
 def mean(question_id):
     answers = Answer.objects.filter(question=Question.objects.get(pk=question_id))
-    sum = 0
+    answers_sum = 0
     for answer in answers:
-        sum += int(answer.answer)
-    return (sum / answers.count()) if answers.count() > 0 else 0
+        answers_sum += int(answer.answer)
+    return (answers_sum / answers.count()) if answers.count() > 0 else 0
 
 
 def distribution(question_id):
@@ -78,7 +79,6 @@ def survey_statistics(request):
         else:
             print('Can not recognize question type %s' % q.type)
         questions_list.append(question)
-
     return render_to_response('statistics.html', {'questions': questions_list})
 
 
@@ -94,13 +94,12 @@ def survey_answers(request):
                 answer
             ))
     groups = []
-    result = sorted(result, key=lambda f:f[0])
     for k, g in groupby(result, lambda f: f[0]):
         groups.append(list(g))
-    users_dict = {'users':[]}
-    for questions in groups :
+    users_dict = {'users': []}
+    for questions_group in groups:
         user = {'questions': []}
-        for question in questions:
+        for question in questions_group:
             user['questions'].append({'title': question[1].text, 'answer': question[2].answer})
         users_dict['users'].append(user)
     return render_to_response('answers.html', users_dict)

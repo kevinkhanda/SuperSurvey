@@ -23,6 +23,6 @@ docker-compose up
 
 #### Setup initial data
 
-Run following command to add 3 basic questions
+Run following command to add 3 basic questions and Session counter
 
 `python manage.py shell < add_initial_questions.py`

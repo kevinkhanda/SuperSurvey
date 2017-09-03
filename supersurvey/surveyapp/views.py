@@ -111,6 +111,6 @@ def survey_answers(request):
     for questions_group in groups:
         user = {'questions': []}
         for question in questions_group:
-            user['questions'].append({'title': question[1].text, 'answer': question[2].answer})
+            user['questions'].append({'title': question[1].text, 'answer': question[1].variants[int(question[2].answer)] if question[1].type == 'MC' else question[2].answer })
         users_dict['users'].append(user)
     return render_to_response('answers.html', users_dict)

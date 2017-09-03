@@ -1,0 +1,23 @@
+{% extends 'bootstrap.html' %}
+
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% block bootstrap3_content %}
+<script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+
+    <div class="container">
+        <h1>{% block title %}(no title){% endblock %}</h1>
+
+        <p>
+            <a href="{% url 'hello' %}">home</a>
+            <a href="{% url 'questions' %}">questions</a>
+            <a href="{% url 'results' %}">results</a>
+            <a href="{% url 'raw-results' %}">raw results</a>
+        </p>
+
+        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+        {% block content %}(no content){% endblock %}
+    </div>
+
+{% endblock %}

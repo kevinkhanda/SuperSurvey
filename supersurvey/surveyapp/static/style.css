@@ -1,0 +1,22 @@
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.spoiler {
+    display: table;
+    position: relative;
+	/* background-color: #f9fafa; */
+	/* border: 1px solid #ddd; */
+	margin-bottom: 10px;
+}
+
+.spoiler-btn {
+	padding: 2px 6px;
+	cursor: pointer;
+}
+
+.spoiler-body {
+	padding: 6px;
+}

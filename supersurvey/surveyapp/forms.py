@@ -21,7 +21,7 @@ class SurveyForm(forms.Form):
                     required=True)
             elif question.type == 'NR':
                 self.fields['question_%s' % question.id] = forms.ChoiceField(
-                    choices=[(i, i) for i in range(0, 11)],
+                    choices=[(i, i) for i in range(1, 11)],
                     label=question.text)
             elif question.type == 'TE':
                 self.fields['question_%s' % question.id] = forms.CharField(

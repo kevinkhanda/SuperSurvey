@@ -94,7 +94,7 @@ def survey_statistics(request):
 def survey_answers(request):
     result = []
     groups = []
-    questions_list = Question.objects.filter(deleted=False)
+    questions_list = Question.objects.all()
     for question in questions_list:
         answers = Answer.objects.filter(question=question)
         for answer in answers:

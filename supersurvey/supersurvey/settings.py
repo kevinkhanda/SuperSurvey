@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
-STATIC_URL = ['surveyapp.static', 'surveyapp.templates']
+STATIC_ROOT = os.path.join(BASE_DIR, 'surveyapp.static')
+STATIC_URL = ['/static/']
 
 # Application definition
 

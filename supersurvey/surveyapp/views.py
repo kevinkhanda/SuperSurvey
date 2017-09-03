@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render_to_response, redirect
@@ -60,7 +61,7 @@ def distribution(question_id):
         result.append({'answer': variant, 'number': count})
     return result
 
-
+@login_required(login_url='/survey/login/')
 def survey_statistics(request):
     questions_list = []
     all_questions = Question.objects.filter(deleted=False)
@@ -81,7 +82,7 @@ def survey_statistics(request):
         questions_list.append(question)
     return render_to_response('statistics.html', {'questions': questions_list})
 
-
+@login_required(login_url='/survey/login/')
 def survey_answers(request):
     result = []
     questions_list = Question.objects.filter(deleted=False)

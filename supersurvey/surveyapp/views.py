@@ -9,15 +9,6 @@ from .models import Question, Answer, Session
 from .forms import SurveyForm
 
 
-# Create your views here.
-def index(request):
-    return HttpResponse("Hi, folk! You are on a Super Survey index.")
-
-
-def hello(request):
-    return render(request, "hello.html", {'message': 'message from view'})
-
-
 def save_answer(request, question, answer):
     session_id = Session.objects.all().get(pk=1).session_id + 1
     Session.objects.get(pk=1).session_id = session_id
@@ -35,9 +26,9 @@ def questions(request):
     if form.is_valid():
         for (question, answer) in form.answers():
             save_answer(request, question, answer)
-        return redirect("hello")
+        return redirect('hello')
 
-    return render_to_response("survey.html", {'form': form})
+    return render_to_response('survey.html', {'form': form})
 
 
 def question_details(request, question_id):
@@ -50,7 +41,7 @@ def mean(question_id):
     sum = 0
     for answer in answers:
         sum += int(answer.answer)
-    return sum / answers.count()
+    return (sum / answers.count()) if answers.count() > 0 else 0
 
 
 def distribution(question_id):
@@ -59,27 +50,30 @@ def distribution(question_id):
     result = []
     for i, variant in enumerate(question.variants):
         count = answers.filter(answer=i).count()
-        result.append((variant, count))
+        result.append({'answer': variant, 'number': count})
     return result
 
 
-def survey_results(request):
-    result = []
+def results(request):
+    questions = []
     all_questions = Question.objects.filter(deleted=False)
     for q in all_questions:
-        dick = {'type': q.type, 'title': q.text}
+        question = {'type': q.type, 'title': q.text}
         if q.type == 'NR':
-            dick['value'] = mean(q.pk)
+            question['value'] = mean(q.pk)
         elif q.type == 'MC':
-            dick['answers'] = distribution(q.pk)
+            question['answers'] = distribution(q.pk)
         elif q.type == 'TE':
             answers = Answer.objects.filter(question=q)
             answers_list = []
             for answer in answers:
                 answers_list.append(answer.answer)
-            dick['answers'] = answers_list
-        result.append(dick)
-    return HttpResponse(result)
+            question['answers'] = answers_list
+        else:
+            print('Can not recognize question type %s' % q.type)
+        questions.append(question)
+
+    return render_to_response('results.html', {'questions': questions})
 
 
 def survey_answers(request):
@@ -94,3 +88,30 @@ def survey_answers(request):
                 answer
             ))
     return sorted(result, key=lambda tup: tup[1])
+
+def raw_results(request):
+    return render_to_response('raw-results.html',
+        {'users': [{
+            'questions': [ {
+                'title': 'Che, kak dela?',
+                'answer': 'supeeeer'
+            },
+            {
+                'title': 'Che, na chem codish?',
+                'answer': 'Na pitone yopta'
+            }
+        ]},
+        {
+            'questions': [
+                 {
+                'title': 'Che, kak dela?',
+                'answer': 'otli4n0'
+            },
+            {
+                'title': 'Che, na chem codish?',
+                'answer': 'Na jave yopta'
+            }
+        ]
+        }
+
+        ]})

@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response, redirect
 from .models import Question, Answer, Session
 
 from .forms import SurveyForm
-
+from itertools import groupby
 
 def save_answer(request, question, answer):
     session_id = Session.objects.all().get(pk=1).session_id
@@ -93,10 +93,14 @@ def survey_answers(request):
                 question,
                 answer
             ))
-    users_dict = {}
-    for tup in result:
-        if not tup[0] in users_dict:
-            users_dict[tup[0]] = []
-        questions_dict = {'title': tup[1].text, 'answer': tup[2].answer}
-        users_dict[tup[0]].append(questions_dict)
-    return HttpResponse(users_dict)
+    groups = []
+    result = sorted(result, key=lambda f:f[0])
+    for k, g in groupby(result, lambda f: f[0]):
+        groups.append(list(g))
+    users_dict = {'users':[]}
+    for questions in groups :
+        user = {'questions': []}
+        for question in questions:
+            user['questions'].append({'title': question[1].text, 'answer': question[2].answer})
+        users_dict['users'].append(user)
+    return render_to_response('answers.html', users_dict)

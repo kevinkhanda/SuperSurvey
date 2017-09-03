@@ -34,7 +34,7 @@ def questions(request):
     if form.is_valid():
         for (question, answer) in form.answers():
             save_answer(request, question, answer)
-        return redirect('hello')
+        return redirect('home')
     return render_to_response('survey.html', {'form': form})
 
 

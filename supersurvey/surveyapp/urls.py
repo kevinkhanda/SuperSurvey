@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 from .views import question_details, questions, survey_statistics, survey_answers
 
 urlpatterns = [
-    url(r'^$', questions, name='hello'),
+    url(r'^$', questions, name='home'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^questions/$', questions, name='questions'),

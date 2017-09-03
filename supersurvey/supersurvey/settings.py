@@ -25,7 +25,7 @@ SECRET_KEY = 'v%-zvt^_(pvt)-qc%hus8ovntd1dr^r&)xjpiobq&s=gq%zh+1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'surveyapp.static')
 STATIC_URL = ['/static/']
@@ -81,11 +81,15 @@ WSGI_APPLICATION = 'supersurvey.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        # 'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'NAME': 'surveys',
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': '127.0.0.1',
         'PORT': 5432,
+        # 'NAME': 'postgres',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        # 'HOST': 'db',
     }
 }
 

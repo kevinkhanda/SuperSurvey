@@ -58,7 +58,7 @@ spec:
                   key: X89DAOEBN4i
             # [END cloudsql_secrets]
         ports:
-        - containerPort: 8080
+        - containerPort: 8000
 
       # [START proxy_container]
       - image: b.gcr.io/cloudsql-docker/gce-proxy:1.05

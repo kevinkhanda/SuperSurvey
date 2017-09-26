@@ -1,24 +1,41 @@
 # SuperSurvey
+
 A survey application for a Cloud Computing Course at Innopolis University
+
 ## Getting Started
+
 These instruction will help you to set up a project environment on your local machine
+
 ### Prerequisites
+
 * [Python interpreter of version 3.5](https://www.python.org/downloads/release/python-354/)
+
 #### Installing
+
 * Clone a repository into chosen directory:
-```
+
+```sh
 git clone https://github.com/KKhanda/SuperSurvey.git
 ```
+
 * Install required modules
-```
+
+```sh
 pip install -U pip
 pip install -r requirements.txt
 ```
-#### Running in docker
 
-```
+#### Running with docker-compose
+
+```sh
 docker-compose build
 docker-compose up
+```
+
+#### Running with kubernetes
+
+```bash
+kubectl create -f kubernetes.yml
 ```
 
 #### Setup initial data

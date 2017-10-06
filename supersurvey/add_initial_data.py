@@ -1,5 +1,8 @@
 from surveyapp.models import Question, Session
 
+from django.contrib.auth.models import User
+User.objects.create_superuser('root', 'admin@example.com', 'qwerty123')
+
 Session.objects.create().save()
 
 Question.objects.create(
